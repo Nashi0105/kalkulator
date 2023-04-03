@@ -27,7 +27,7 @@ const inputNumber = (number) => {
     if (resultNumber !== '') {
         currentNumber = number
         resultNumber = ''
-    } else if (currentNumber === '0' || currentNumber === 0) {
+    } else if (currentNumber === '0') {
         currentNumber = number
     } else {
         currentNumber += number
@@ -43,26 +43,28 @@ const inputOperator = (operator) => {
 }
 
 const calculate = () => {
-    let result = ''
-    switch(calculationOperator) {
-        case '+':
-            result = parseFloat(prevNumber) + parseFloat(currentNumber)
-            break
-        case '-':
-            result = prevNumber - currentNumber
-            break
-        case '*':
-            result = prevNumber * currentNumber
-            break
-        case '/':
-            result = prevNumber / currentNumber
-            break
-        default:
-            return
+    if (currentNumber !== '') {
+        let result = ''
+        switch(calculationOperator) {
+            case '+':
+                result = parseFloat(prevNumber) + parseFloat(currentNumber)
+                break
+            case '-':
+                result = prevNumber - currentNumber
+                break
+            case '*':
+                result = prevNumber * currentNumber
+                break
+            case '/':
+                result = prevNumber / currentNumber
+                break
+            default:
+                return
+        }
+        currentNumber = result
+        resultNumber = result.toString()
+        calculationOperator = ''
     }
-    currentNumber = result
-    resultNumber = String(result)
-    calculationOperator = ''
 }
 
 const clearAll = () => {
@@ -86,10 +88,13 @@ const inputDecimal = (dot) => {
 }
 
 const doPercentage = () => {
-    let result = ''
-    result = currentNumber / 100
-    currentNumber = result
-    currentNumber = currentNumber.toString()
+    if (calculationOperator !== '' && currentNumber !== '') {
+        let result = ''
+        result = prevNumber * currentNumber / 100
+        currentNumber = result
+        currentNumber = currentNumber.toString()
+    }
+    return
 }
 
 numbers.forEach((number) => {
@@ -124,5 +129,7 @@ decimal.addEventListener('click', (event) => {
 
 percentage.addEventListener('click', () => {
     doPercentage()
-    updateScreen(currentNumber)
+    if (currentNumber !== '') {
+        updateScreen(currentNumber)
+    }
 })
